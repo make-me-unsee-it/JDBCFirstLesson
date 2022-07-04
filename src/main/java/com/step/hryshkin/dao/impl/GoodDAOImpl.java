@@ -11,8 +11,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 public class GoodDAOImpl implements GoodDAO {
     private static final Logger LOGGER = LogManager.getLogger(ContextInitializer.class);
@@ -21,7 +23,8 @@ public class GoodDAOImpl implements GoodDAO {
     public Optional<Good> getByTitle(String title) {
         Optional<Good> good = Optional.empty();
         try (Connection connection = Connector.createConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM GOODS WHERE TITLE = '" + title + "'")) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM GOODS WHERE TITLE = '"
+                    + title + "'")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     good = Optional.of(new Good(rs.getLong("ID"),
@@ -29,8 +32,8 @@ public class GoodDAOImpl implements GoodDAO {
                             rs.getBigDecimal("PRICE")));
                 }
             }
-        } catch (SQLException throwables) {
-            LOGGER.error("SQLException at UserDAOImpl at CreateNewUser" + throwables);
+        } catch (SQLException throwable) {
+            LOGGER.error("SQLException in method getByTitle" + throwable);
 
         }
         return good;
@@ -38,11 +41,39 @@ public class GoodDAOImpl implements GoodDAO {
 
     @Override
     public Optional<Good> getId(long id) {
-        return Optional.empty();
+        Optional<Good> good = Optional.empty();
+        try (Connection connection = Connector.createConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM GOODS WHERE ID =" + id)) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    good = Optional.of(new Good(rs.getLong("ID"),
+                            rs.getNString("TITLE"),
+                            rs.getBigDecimal("PRICE")));
+                }
+            }
+        } catch (SQLException throwable) {
+            LOGGER.error("SQLException in method getID" + throwable);
+        }
+        return good;
     }
 
     @Override
     public List<Good> getAll() {
-        return null;
+        Good good;
+        List<Good> goodList = new ArrayList<>();
+        try (Connection connection = Connector.createConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM GOODS ")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    good = new Good(rs.getLong("ID"),
+                            rs.getNString("TITLE"),
+                            rs.getBigDecimal("PRICE"));
+                    goodList.add(good);
+                }
+            }
+        } catch (SQLException throwable) {
+            LOGGER.error("SQLException in method getAll" + throwable);
+        }
+        return goodList;
     }
 }
