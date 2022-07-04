@@ -1,7 +1,6 @@
 package com.step.hryshkin.filter;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 
 import com.step.hryshkin.dao.UserDAO;
@@ -15,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebFilter(urlPatterns = {"/Shop.jsp"})
 public class FilterForShop implements Filter {
     private static final Logger LOGGER = LogManager.getLogger(FilterForShop.class);
     private final GoodServiceImpl goodServiceImpl = new GoodServiceImpl();
@@ -42,7 +40,7 @@ public class FilterForShop implements Filter {
             if (request.getParameter("check") == null) {
                 UtilsForShop.setCheckStatus(request, request.getParameter("check"));
             } else {
-                String path = "/ErrorPage.jsp";                             //TODO ErrorPage.jsp
+                String path = "/errorPage.jsp";                             //TODO ErrorPage.jsp
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
                 try {
                     requestDispatcher.forward(request, servletResponse);
@@ -75,9 +73,8 @@ public class FilterForShop implements Filter {
         }
     }
 
-
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
