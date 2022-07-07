@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 public class GoodDAOImpl implements GoodDAO {
     private static final Logger LOGGER = LogManager.getLogger(ContextInitializer.class);
 
@@ -23,8 +22,7 @@ public class GoodDAOImpl implements GoodDAO {
     public Optional<Good> getByTitle(String title) {
         Optional<Good> good = Optional.empty();
         try (Connection connection = Connector.createConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM GOODS WHERE TITLE = '"
-                    + title + "'")) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM GOODS WHERE TITLE = '" + title + "'")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     good = Optional.of(new Good(rs.getLong("ID"),
@@ -33,7 +31,7 @@ public class GoodDAOImpl implements GoodDAO {
                 }
             }
         } catch (SQLException throwable) {
-            LOGGER.error("SQLException in method getByTitle" + throwable);
+            LOGGER.error("SQLException at UserDAOImpl at CreateNewUser" + throwable);
 
         }
         return good;
